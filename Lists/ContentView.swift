@@ -7,74 +7,115 @@
 
 import SwiftUI
 import CoreData
+import UIKit
 
-struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-
-    var body: some View {
-        List {
-            ForEach(items) { item in
-                Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-            }
-            .onDelete(perform: deleteItems)
-        }
-        .toolbar {
-            #if os(iOS)
-            EditButton()
-            #endif
-
-            Button(action: addItem) {
-                Label("Add Item", systemImage: "plus")
-            }
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
+struct CustomGroup:View {
+    var img = ""
+    var count = ""
+    var col:Color
+    var label = ""
+    var body: some View{
+        VStack{
+            GroupBox(label:
+                        HStack{
+                            Text("\(Image(systemName: img))")
+                                .foregroundColor(col)
+                                .font(.title)
+                            Spacer()
+                            Text(count)
+                                .foregroundColor(.gray)
+                                .font(.title)
+                                .fontWeight(.bold)
+                        }
+            ){
+                VStack{
+                    Text("")
+                    HStack{
+                        Text(label)
+                            .font(.title2)
+                            .foregroundColor(.gray)
+                            .fontWeight(.semibold)
+                        Spacer()
+                    }
+                }
+            }.cornerRadius(15)
+                
+            
         }
     }
 }
 
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
+struct ContentView: View {
+    @Environment(\.managedObjectContext) var moc
+    @FetchRequest(entity: Manga.entity(), sortDescriptors: [
+        NSSortDescriptor(keyPath: \Manga.name, ascending: true),
+        NSSortDescriptor(keyPath: \Manga.chapters, ascending: true)
+    ]) var manga: FetchedResults<Manga>
+    @FetchRequest(entity: Movie.entity(), sortDescriptors: [
+        NSSortDescriptor(keyPath: \Movie.name, ascending: true),
+        NSSortDescriptor(keyPath: \Movie.rating, ascending: true)
+    ]) var movie: FetchedResults<Movie>
+    @FetchRequest(entity: TvShow.entity(), sortDescriptors: [
+        NSSortDescriptor(keyPath: \TvShow.name, ascending: true),
+        NSSortDescriptor(keyPath: \TvShow.episode, ascending: true)
+    ]) var show: FetchedResults<TvShow>
+    @FetchRequest(entity: Anime.entity(), sortDescriptors: [
+        NSSortDescriptor(keyPath: \Anime.name, ascending: true),
+        NSSortDescriptor(keyPath: \Anime.episode, ascending: true)
+    ]) var anime: FetchedResults<Anime>
+
+    
+    var body: some View {
+        NavigationView{
+            VStack{
+               
+                LazyVGrid(columns: [.init(), .init()]) {
+                    NavigationLink(destination: MangaList()){
+                        CustomGroup(img: "books.vertical", count: "\(manga.count)", col: Color.green, label: "Manga")
+                    }
+                    NavigationLink(destination: AnimeList()){
+                        CustomGroup(img: "tv", count: "\(anime.count)", col: Color.red, label: "Anime")
+                    }
+                    NavigationLink(destination: ShowList()){
+                        CustomGroup(img: "play.tv", count: "\(show.count)", col: Color.orange, label: "Tv Shows")
+                    }
+                    NavigationLink(destination: MovieList()){
+                        CustomGroup(img: "film", count: "\(movie.count)", col: Color.blue, label: "Movies")
+                    }
+                    
+                }.padding()
+                Spacer()
+               
+                Form{
+                    HStack{
+                        NavigationLink(destination: Recents()){
+                        Label(
+                            title: { Text("Recently added")
+                                .font(.title2)
+                            },
+                            icon: { Image(systemName: "list.bullet")
+                                .padding(9)
+                                .font(.title2)
+                                .background(Color.orange)
+                                .foregroundColor(.white)
+                                .clipShape(Circle())
+                            }
+                        )
+                        }
+                        
+                    }.padding(5)
+                }
+            }
+            .navigationTitle("Lists")
+        }
+    }
+  
+}
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        ContentView().preferredColorScheme(.dark)
     }
 }

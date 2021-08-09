@@ -1,0 +1,6 @@
+module Pods_Lists_ListsUITests {
+  umbrella header "Pods-Lists-ListsUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

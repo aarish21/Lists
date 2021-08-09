@@ -1,0 +1,6 @@
+module AYPopupPickerView {
+  umbrella header "AYPopupPickerView-umbrella.h"
+
+  export *
+  module * { export * }
+}
