@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import AYPopupPickerView
+
 
 struct AddShow: View {
     @Environment(\.managedObjectContext) var moc
@@ -20,7 +20,7 @@ struct AddShow: View {
     
     let types = ["Watching","On hold","Dropped","Completed","ReWatching","Plan to Watch"]
     
-    let popupPickerView = AYPopupPickerView()
+    
     
     var body: some View {
         NavigationView{
@@ -87,6 +87,7 @@ struct AddShow: View {
                 self.presentationMode.wrappedValue.dismiss()
                 
             })
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

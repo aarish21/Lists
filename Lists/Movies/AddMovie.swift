@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import AYPopupPickerView
 
 struct AddMovie: View {
     @Environment(\.managedObjectContext) var moc
@@ -61,6 +60,7 @@ struct AddMovie: View {
                 self.presentationMode.wrappedValue.dismiss()
                 
             })
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

@@ -67,6 +67,7 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView{
+            ScrollView{
             VStack{
                
                 LazyVGrid(columns: [.init(), .init()]) {
@@ -84,8 +85,7 @@ struct ContentView: View {
                     }
                     
                 }.padding()
-                Spacer()
-               
+                
                 Form{
                     HStack{
                         NavigationLink(destination: Recents()){
@@ -104,9 +104,25 @@ struct ContentView: View {
                         }
                         
                     }.padding(5)
+                }.frame(height: 125)
+                
+                VStack{
+                LazyVGrid(columns: [.init(), .init()]) {
+                    NavigationLink(destination: TopMangaList()){
+                        CustomGroup(img: "book", col: Color.green, label: "Top Manga")
+                    }
+                    NavigationLink(destination: TopAnimeList()){
+                        CustomGroup(img: "play",  col: Color.yellow, label: "Top anime")
+                    }
+                }.padding()
                 }
             }
+               
             .navigationTitle("Lists")
+            }
+            
+            
+            
         }
     }
   

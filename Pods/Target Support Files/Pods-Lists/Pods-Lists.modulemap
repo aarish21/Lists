@@ -1,6 +1,0 @@
-module Pods_Lists {
-  umbrella header "Pods-Lists-umbrella.h"
-
-  export *
-  module * { export * }
-}
