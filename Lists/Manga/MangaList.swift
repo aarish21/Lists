@@ -58,7 +58,7 @@ struct MangaList: View {
                     Button(action: {
                     self.showingAddScreen.toggle()
                 }) {
-                    Image(systemName: "plus.circle.fill")
+                    Image(systemName: "plus")
                         .renderingMode(.template)
                 }})
                 .sheet(isPresented: $showingAddScreen) {

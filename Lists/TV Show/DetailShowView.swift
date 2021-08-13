@@ -28,7 +28,7 @@ struct DetailShowView: View{
         VStack{
             Form{
                 Stepper(value:$episode, step: 1){
-                    Text("\(episode) Chapters")
+                    Text("\(episode) Episodes")
                 }
                 Section{
                     Stepper(value:$rating,in: 0...10, step: 1){
